@@ -1,0 +1,38 @@
+# IDE
+.idea/
+*.iml
+*.iws
+.DS_Store
+
+# Maven
+target/
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# Application Properties
+application-local.properties
+application-dev.properties
+application-prod.properties
+
+# Logs
+logs/
+*.log
+
+# Spring Boot
+/build/
+/.gradle/
+
+# Database
+*.db
+*.sqlite
+
+# Node (if needed)
+node_modules/

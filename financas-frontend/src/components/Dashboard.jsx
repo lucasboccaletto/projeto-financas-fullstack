@@ -5,43 +5,36 @@ import Formulario from './Formulario';
 import ListaTransacoes from './ListaTransacoes';
 import Resumo from './Resumo';
 import Grafico from './Grafico';
+import Contas from './Contas';
+import Categorias from './Categorias';
+import Orcamento from './Orcamento';
+import Metas from './Metas';
+import Configuracoes from './Configuracoes';
 
 function Dashboard() {
   const [recarregar, setRecarregar] = useState(0);
-
-  const atualizarTabela = () => {
-    setRecarregar(recarregar + 1); 
-  };
+  const atualizar = () => setRecarregar(r => r + 1);
 
   return (
     <div className="app-layout">
-      {/* Menu Lateral Fixo */}
       <Sidebar />
-
-      {/* Conteúdo Dinâmico (Lado Direito) */}
       <div className="main-content">
-        <header style={{ marginBottom: '20px', padding: '0' }}>
-          <h1 style={{ textAlign: 'left', paddingBottom: '10px' }}>Meu Gerenciador de Finanças</h1>
-        </header>
-        
         <Routes>
-          {/* Rota 1: Tela Inicial (Dashboard + Formulário) */}
           <Route path="/" element={
             <>
               <Resumo gatilho={recarregar} />
-              <Formulario aoSalvar={atualizarTabela} />
+              <Formulario aoSalvar={atualizar} />
             </>
           } />
-
-          {/* Rota 2: Tela de Histórico */}
           <Route path="/historico" element={
-            <ListaTransacoes gatilho={recarregar} aoDeletar={atualizarTabela} />
+            <ListaTransacoes gatilho={recarregar} aoDeletar={atualizar} />
           } />
-
-          {/* Rota 3: Tela de Gráficos */}
-          <Route path="/graficos" element={
-            <Grafico gatilho={recarregar} />
-          } />
+          <Route path="/graficos" element={<Grafico gatilho={recarregar} />} />
+          <Route path="/contas" element={<Contas gatilho={recarregar} />} />
+          <Route path="/categorias" element={<Categorias />} />
+          <Route path="/orcamento" element={<Orcamento gatilho={recarregar} />} />
+          <Route path="/metas" element={<Metas />} />
+          <Route path="/configuracoes" element={<Configuracoes />} />
         </Routes>
       </div>
     </div>

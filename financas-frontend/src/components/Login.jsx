@@ -1,58 +1,90 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    
+    setError('');
+
+    if (!username.trim()) { setError('Informe o nome de usuário'); return; }
+    if (password.length < 6) { setError('Senha deve ter no mínimo 6 caracteres'); return; }
+
+    setLoading(true);
     try {
-      const response = await fetch('http://localhost:8080/auth/login', {
+      const res = await fetch('http://localhost:8080/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
 
-      if (response.ok) {
-        const token = await response.text(); 
-        localStorage.setItem('token', token); 
-        alert('Login realizado com sucesso!');
-        window.location.href = '/'; // Redireciona para o Dashboard e força recarregamento
+      if (res.ok) {
+        const token = await res.text();
+        login(token);
+        navigate('/');
       } else {
-        alert('Usuário ou senha inválidos!');
+        setError('Usuário ou senha incorretos');
       }
-    } catch (error) {
-      alert('Erro ao conectar com o servidor.');
+    } catch {
+      setError('Erro ao conectar com o servidor');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div style={{ padding: '50px', maxWidth: '300px', margin: 'auto', textAlign: 'center' }}>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        <input 
-          placeholder="Usuário" 
-          onChange={(e) => setUsername(e.target.value)} 
-          style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-        />
-        <input 
-          type="password" 
-          placeholder="Senha" 
-          onChange={(e) => setPassword(e.target.value)} 
-          style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-        />
-        <button type="submit" style={{ padding: '10px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}>
-          Entrar
-        </button>
-      </form>
-      
-      {/* Aqui está o link que leva para a nova tela de cadastro */}
-      <p style={{ marginTop: '20px' }}>
-        Não tem uma conta? <Link to="/cadastro" style={{ color: '#007bff', textDecoration: 'none', fontWeight: 'bold' }}>Cadastre-se</Link>
-      </p>
+    <div className="login-page">
+      <div className="login-card">
+        <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+          <div style={{ fontSize: '2.5rem', marginBottom: '10px' }}>💰</div>
+          <h2>Finance<span style={{ color: '#667eea', fontWeight: 900 }}>Pro</span></h2>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', marginTop: '5px' }}>Gerenciador de Finanças Pessoais</p>
+        </div>
+
+        {error && (
+          <div style={{ background: '#f8d7da', color: '#721c24', padding: '12px', borderRadius: '8px', marginBottom: '20px', fontSize: '0.9rem' }}>
+            ⚠️ {error}
+          </div>
+        )}
+
+        <form onSubmit={handleLogin}>
+          <div>
+            <label style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>Usuário</label>
+            <input
+              placeholder="Seu nome de usuário"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              disabled={loading} required autoFocus
+            />
+          </div>
+          <div>
+            <label style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-muted)', display: 'block', marginBottom: '6px' }}>Senha</label>
+            <input
+              type="password" placeholder="Sua senha"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              disabled={loading} required
+            />
+          </div>
+          <button type="submit" disabled={loading} style={{ marginTop: '8px', width: '100%', padding: '13px', fontSize: '16px' }}>
+            {loading ? '⏳ Entrando...' : '🔐 Entrar'}
+          </button>
+        </form>
+
+        <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+          Não tem conta?{' '}
+          <Link to="/cadastro" style={{ color: '#667eea', textDecoration: 'none', fontWeight: '600' }}>
+            Criar conta grátis
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

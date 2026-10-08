@@ -1,0 +1,31 @@
+# Maven
+financas-backend/financas-backend/target/
+financas-backend/financas-backend/.mvn/
+*.class
+*.jar
+*.war
+
+# Node / Frontend
+financas-frontend/node_modules/
+financas-frontend/dist/
+financas-frontend/.vite/
+
+# Env / secrets
+.env
+financas-backend/financas-backend/.env
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.suo
+*.user
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+backend.log
+backend-err.log

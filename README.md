@@ -1,95 +1,287 @@
-# 💰 FinancePro - Gerenciador de Finanças Full-Stack
+# 💰 FinancePro — Gerenciador de Finanças Pessoais Full-Stack
 
-Este é um ecossistema completo de gestão financeira pessoal robusto, escalável e seguro. O projeto foi concebido e implementado como uma iniciativa de **desenvolvimento pessoal e aprofundamento técnico**, com o objetivo de consolidar competências em engenharia de software full-stack, design de arquiteturas seguras e automação de fluxos de dados.
+Aplicação completa de gestão financeira pessoal, desenvolvida com **Spring Boot 4 + React 19**, cobrindo desde o controle de transações até orçamentos, metas, análises gráficas e exportação de dados.
 
-Durante o ciclo de desenvolvimento, foi adotada uma abordagem de vanguarda através do modelo de **Pair Programming com um Agente de Inteligência Artificial (IA)**, atuando ativamente no auxílio da codificação, refatoração arquitetural, mentoria técnica e otimização de segurança da aplicação.
+> Desenvolvido em co-criação com IA (Claude Code / Anthropic) como projeto de aprofundamento técnico full-stack.
 
 ---
 
-## 🚀 Diferenciais e Inovações Técnicas
+## 🚀 Funcionalidades
 
-Diferente de soluções de controle financeiro triviais, o **FinancePro** engloba práticas arquiteturais avançadas exigidas no mercado corporativo atual:
+### 💳 Contas
+- Cadastro de contas: Corrente, Poupança, Dinheiro, Cartão de Crédito, Investimento
+- Saldo calculado automaticamente com base nas transações
+- Campos extras para cartão de crédito (limite, dia de fechamento/vencimento)
+- Soft delete (desativar sem perder histórico)
 
-* **Autenticação Stateless com JWT:** Implementação de segurança robusta utilizando Tokens JWT (*JSON Web Tokens*) com tempo de expiração, eliminando o armazenamento de sessões no servidor e garantindo alta escalabilidade.
-* **Isolamento de Dados em Nível de Banco (Multi-User):** Arquitetura que garante a rastreabilidade e a privacidade das informações. Cada transação é vinculada de forma relacional (relacionamento `@ManyToOne` via JPA/Hibernate) a um usuário específico. O backend extrai a identidade diretamente do token seguro, impossibilitando o vazamento de dados entre contas distintas.
-* **Interface Minimalista e Foco em UX:** Design centralizado na usabilidade (*User Experience*), com uma barra lateral em *Dark Theme* de alto contraste e área de trabalho limpa, minimizando a fadiga visual e organizando o fluxo de informação com o uso semântico de emojis.
-* **Segurança Criptográfica Extrema:** Utilização do algoritmo `BCryptPasswordEncoder` do Spring Security, garantindo que as senhas dos usuários jamais sejam salvas em texto puro no banco de dados.
+### 🏷️ Categorias
+- Categorias personalizadas por usuário (receita / despesa / ambas)
+- Ícone e cor personalizáveis
+- Categorias padrão do sistema (compartilhadas entre todos os usuários)
+
+### 💸 Transações
+- Tipos: Receita, Despesa, Transferência entre contas
+- Status: Pago / Pendente / Cancelado
+- Data de vencimento para contas a pagar
+- **Parcelamento automático** (divide em N parcelas mensais)
+- **Recorrência** (única, diária, semanal, mensal, anual)
+- Observação por transação
+- Vinculação com conta e categoria
+- Campo `categoria` legado mantido para retrocompatibilidade
+
+### 🔍 Histórico e Filtros
+- Paginação server-side
+- Filtros por: tipo, status, conta, categoria, período (data início/fim), texto
+- Busca por descrição (case-insensitive)
+- Edição e exclusão individual ou **em lote** (checkboxes)
+- Alternância de status direto na lista (Pago ↔ Pendente)
+
+### 📊 Dashboard
+- Cards mensais: Receitas, Despesas, Saldo, Pendentes
+- Saldo por conta com patrimônio total
+- Próximos vencimentos (30 dias)
+
+### 📈 Análises e Gráficos
+- Evolução mensal: gráfico de barras (6 meses)
+- Despesas por categoria: gráfico de pizza
+- Fluxo de caixa projetado: gráfico de linha (30/60/90 dias)
+- Tabela detalhada por categoria com total
+
+### 📉 Orçamento por Categoria
+- Limite mensal por categoria
+- Barra de progresso com alertas (amarelo ≥80%, vermelho ≥100%)
+- Filtro por mês/ano
+
+### 🎯 Metas e Objetivos
+- Valor objetivo e valor atual
+- Depósito de valores com modal dedicado
+- Progresso em barra e percentual
+- Status: Ativa / Concluída / Cancelada (automático ao atingir 100%)
+- Data objetivo e vinculação a conta
+
+### 📥 Exportação
+- Exportação de todas as transações em **CSV** (UTF-8)
+- Disponível em Configurações e na tela de histórico
+
+### 🌙 Modo Escuro
+- Alternância light/dark via CSS variables (`data-theme`)
+- Preferência salva no `localStorage`
+- Botão no sidebar e na tela de Configurações
+
+### 🐳 Docker
+- `Dockerfile` multi-stage para o backend (build + runtime JRE alpine)
+- `docker-compose.yml` com PostgreSQL, backend e frontend
 
 ---
 
 ## 🛠️ Stack Tecnológica
 
-### **Back-end (API REST)**
-* **Java 17** como linguagem principal.
-* **Spring Boot 3** para orquestração da aplicação.
-* **Spring Security** + **Java JWT (io.jsonwebtoken)** para controle de acesso.
-* **Spring Data JPA / Hibernate** para persistência e abstração de dados.
-* **PostgreSQL** como sistema de gerenciamento de banco de dados relacional.
+### Backend
+| Tecnologia | Versão |
+|---|---|
+| Java | 17 |
+| Spring Boot | 4.1.1-SNAPSHOT |
+| Spring Security + JWT | JJWT 0.12 |
+| Spring Data JPA / Hibernate 7 | — |
+| PostgreSQL | 15+ |
+| Lombok | — |
+| Bean Validation (Jakarta) | — |
 
-### **Front-end (Single Page Application)**
-* **React** com ecossistema baseado em componentes reaproveitáveis.
-* **Vite** como ferramenta de build e ambiente de desenvolvimento rápido.
-* **React Router DOM** para gerenciamento de rotas públicas e leões de chácara de rotas protegidas.
-* **Vanilla CSS** para estilização personalizada, flexbox e estruturação responsiva.
-
----
-
-## ⚙️ Instruções de Uso e Execução Local
-
-### **1. Pré-requisitos Mínimos**
-* Java JDK 17 ou superior.
-* Node.js instalado (versão LTS).
-* Instância ativa do PostgreSQL.
-* Git para clonagem.
-
-### **2. Configuração do Banco de Dados**
-1.  Acesse o seu gerenciador do PostgreSQL (ex: pgAdmin).
-2.  Crie um banco de dados vazio chamado `financas_backend`.
-3.  Abra o arquivo do Back-end `src/main/resources/application.properties` e insira as suas credenciais locais do PostgreSQL:
-    ```properties
-    spring.datasource.username=seu_usuario
-    spring.datasource.password=sua_senha
-    ```
-
-### **3. Inicialização do Back-end (Java)**
-1.  Navegue até o diretório do projeto back-end via terminal:
-    ```bash
-    cd financas-backend
-    ```
-2.  Execute o comando para rodar a aplicação através do Maven wrapper:
-    * **Windows:** `.\mvnw.cmd spring-boot:run`
-    * **Linux/Mac:** `./mvnw spring-boot:run`
-3.  A API será inicializada na porta `8080`. O Hibernate executará a criação automática de tabelas e injeção do usuário inicial no primeiro boot.
-
-### **4. Inicialização do Front-end (React)**
-1.  Abra um novo terminal e navegue até a pasta do front-end:
-    ```bash
-    cd financas-frontend
-    ```
-2.  Instale as dependências listadas no `package.json`:
-    ```bash
-    npm install
-    ```
-3.  Inicie o servidor local de desenvolvimento:
-    ```bash
-    npm run dev
-    ```
-4.  Abra o seu navegador e acesse a URL gerada pelo Vite (padrão: `http://localhost:5173`).
+### Frontend
+| Tecnologia | Versão |
+|---|---|
+| React | 19.x |
+| Vite | 6.x |
+| React Router DOM | 7.x |
+| Recharts | 2.x |
+| CSS Variables (theming) | — |
 
 ---
 
-## 🔑 Credenciais de Teste Homologadas
+## 🗂️ Estrutura do Projeto
 
-A aplicação conta com um fluxo de cadastro de novos usuários totalmente funcional com validações de senhas na interface, mas para agilizar a primeira avaliação, uma conta administradora é populada de forma automática pelo sistema:
-
-* **Usuário de Teste:** `admin_lucas`
-* **Senha de Teste:** `Projeto@2026`
+```
+projeto-financas-fullstack/
+├── docker-compose.yml
+├── financas-backend/
+│   └── financas-backend/
+│       ├── Dockerfile
+│       ├── .env.example
+│       ├── pom.xml
+│       └── src/main/java/com/projeto/financas_backend/
+│           ├── controller/          # AuthController, TransacaoController, ContaController,
+│           │                        # CategoriaController, OrcamentoController, MetaController,
+│           │                        # DashboardController
+│           ├── model/               # Entidades JPA + enums top-level
+│           │   ├── Usuario, Transacao, Conta, Categoria, Orcamento, Meta
+│           │   └── TipoTransacao, StatusTransacao, Recorrencia,
+│           │       TipoConta, TipoCategoria, StatusMeta
+│           ├── model/dto/           # TransacaoRequest, TransferenciaRequest
+│           ├── repository/          # JpaRepository + JpaSpecificationExecutor
+│           │   └── TransacaoSpec    # Filtros dinâmicos com Specification
+│           ├── security/            # JwtService, JwtFilter, SecurityConfig,
+│           │                        # CustomUserDetailsService
+│           └── exception/           # GlobalExceptionHandler
+└── financas-frontend/
+    └── src/
+        ├── App.jsx                  # Rotas + AuthProvider
+        ├── context/AuthContext.jsx  # Login, logout, tema global
+        ├── utils/api.js             # Fetch wrapper com Authorization header
+        └── components/
+            ├── Dashboard.jsx        # Layout principal com subrotas
+            ├── Sidebar.jsx          # Navegação + dark mode toggle
+            ├── Resumo.jsx           # Cards do mês + saldos por conta
+            ├── Formulario.jsx       # Nova/editar transação
+            ├── ListaTransacoes.jsx  # Histórico com filtros e paginação
+            ├── Grafico.jsx          # Análises com Recharts
+            ├── Contas.jsx           # Gestão de contas
+            ├── Categorias.jsx       # Gestão de categorias
+            ├── Orcamento.jsx        # Orçamento por categoria
+            ├── Metas.jsx            # Metas e objetivos
+            ├── Configuracoes.jsx    # Tema, exportação, sessão
+            ├── Login.jsx
+            └── Cadastro.jsx
+```
 
 ---
 
-## 🤖 Desenvolvimento Orientado por IA
+## ⚙️ Executando Localmente
 
-Este repositório destaca-se também pelo método de desenvolvimento. A codificação foi realizada em regime de co-criação com um **Agente de Inteligência Artificial**. A ferramenta foi utilizada de forma estratégica como aceleradora de produtividade, atuando em:
-1.  Arquitetura estrutural e configuração dos filtros de interceptação invisível do Spring Security (`OncePerRequestFilter`).
-2.  Otimização de rotas protegidas e controle do estado de autenticação global no React através de tokens em `localStorage`.
-3.  Apoio em análises de Code Review e correção de falhas de CORS durante a integração ponta a ponta.
+### Pré-requisitos
+- Java 17+
+- Node.js 18+ (LTS)
+- PostgreSQL 14+
+
+### 1. Banco de Dados
+
+Crie o banco no PostgreSQL:
+```sql
+CREATE DATABASE financas_db;
+```
+
+### 2. Backend
+
+```bash
+cd financas-backend/financas-backend
+```
+
+Crie o arquivo `.env` (ou configure as variáveis de ambiente):
+```env
+DB_URL=jdbc:postgresql://localhost:5432/financas_db
+DB_USER=postgres
+DB_PASSWORD=sua_senha
+JWT_SECRET=sua_chave_secreta_muito_longa
+```
+
+Execute:
+```bash
+# Windows
+.\mvnw.cmd spring-boot:run
+
+# Linux/Mac
+./mvnw spring-boot:run
+```
+
+A API sobe na porta **8080**. O Hibernate cria as tabelas automaticamente (`ddl-auto=update`).
+
+### 3. Frontend
+
+```bash
+cd financas-frontend
+npm install
+npm run dev
+```
+
+Acesse: **http://localhost:5173**
+
+---
+
+## 🐳 Docker Compose
+
+Sobe tudo (banco + backend + frontend) com um único comando:
+
+```bash
+docker-compose up --build
+```
+
+| Serviço | Porta |
+|---|---|
+| PostgreSQL | 5432 |
+| Backend (API) | 8080 |
+| Frontend | 5173 |
+
+---
+
+## 🔐 API — Endpoints Principais
+
+### Autenticação
+```
+POST /auth/registrar   → Cadastrar usuário
+POST /auth/login       → Login (retorna JWT)
+```
+
+### Transações
+```
+GET    /api/transacoes              → Listar (filtros + paginação)
+POST   /api/transacoes              → Criar (suporta parcelamento)
+PUT    /api/transacoes/{id}         → Editar
+PATCH  /api/transacoes/{id}/status  → Alterar status
+DELETE /api/transacoes/{id}         → Excluir
+DELETE /api/transacoes/lote         → Excluir em lote
+POST   /api/transacoes/transferencia → Transferência entre contas
+GET    /api/transacoes/exportar/csv → Exportar CSV
+```
+
+### Contas
+```
+GET    /api/contas       → Listar contas ativas
+POST   /api/contas       → Criar
+PUT    /api/contas/{id}  → Editar
+DELETE /api/contas/{id}  → Desativar (soft delete)
+```
+
+### Categorias, Orçamento, Metas
+```
+GET/POST/PUT/DELETE /api/categorias
+GET/POST/PUT/DELETE /api/orcamentos
+GET/POST/PUT/DELETE /api/metas
+PATCH /api/metas/{id}/deposito
+```
+
+### Dashboard
+```
+GET /api/dashboard/resumo         → Resumo mensal + saldos
+GET /api/dashboard/evolucao       → Evolução mensal (últimos N meses)
+GET /api/dashboard/por-categoria  → Despesas por categoria
+GET /api/dashboard/fluxo-caixa    → Projeção de fluxo (30/60/90 dias)
+```
+
+> Todos os endpoints (exceto `/auth/**`) exigem header `Authorization: Bearer <token>`.
+
+---
+
+## 🔒 Segurança
+
+- Senhas armazenadas com **BCrypt**
+- JWT com expiração configurável via `application.properties`
+- Cada endpoint valida que o recurso pertence ao usuário autenticado (sem vazamento entre contas)
+- Spring Security com `OncePerRequestFilter` para interceptação stateless
+
+---
+
+## 🤖 Metodologia de Desenvolvimento
+
+Este projeto foi desenvolvido em regime de **pair programming com IA** (Claude Code — Anthropic), utilizando o agente como:
+
+- Arquitetura e design de entidades JPA
+- Implementação de filtros dinâmicos com `JpaSpecificationExecutor`
+- Configuração de segurança Spring Security + JWT
+- Componentização React com Context API
+- Debugging e refatoração (ex: extração de inner enums para resolver `ClassNotFoundException` no Hibernate 7)
+- Docker multi-stage build
+
+---
+
+## 📄 Licença
+
+MIT — livre para uso, estudo e modificação.
