@@ -15,14 +15,12 @@ public class DashboardController {
 
     private final TransacaoRepository transacaoRepository;
     private final ContaRepository contaRepository;
-    private final OrcamentoRepository orcamentoRepository;
     private final UsuarioRepository usuarioRepository;
 
     public DashboardController(TransacaoRepository transacaoRepository, ContaRepository contaRepository,
-                                OrcamentoRepository orcamentoRepository, UsuarioRepository usuarioRepository) {
+                                UsuarioRepository usuarioRepository) {
         this.transacaoRepository = transacaoRepository;
         this.contaRepository = contaRepository;
-        this.orcamentoRepository = orcamentoRepository;
         this.usuarioRepository = usuarioRepository;
     }
 
